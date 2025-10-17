@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import ExportButton from './ExportButton';
+import useCurrencyConverter from '../hooks/useCurrencyConverter';
 
 function QuotationDisplay({ quote }) {
   const [discount, setDiscount] = useState(0);
   const [currency, setCurrency] = useState('INR');
+  const { convertCurrency, symbols } = useCurrencyConverter();
   
   if (!quote) return null;
 
@@ -17,13 +19,8 @@ function QuotationDisplay({ quote }) {
   const discountAmount = (totalOriginal * discount) / 100;
   const finalTotal = totalOriginal - discountAmount;
 
-  // Simple currency conversion (you can integrate ExchangeRate API later)
-  const convertCurrency = (amount) => {
-    const rates = { INR: 1, USD: 0.012, EUR: 0.011 };
-    const symbols = { INR: '₹', USD: '$', EUR: '€' };
-    const converted = amount * rates[currency];
-    return `${symbols[currency]}${converted.toLocaleString()}`;
-  };
+  // Currency conversion using real-time rates
+  const formatCurrency = (amount) => convertCurrency(amount, currency);
 
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden">
@@ -65,6 +62,7 @@ function QuotationDisplay({ quote }) {
               <option value="INR">Indian Rupee (₹)</option>
               <option value="USD">US Dollar ($)</option>
               <option value="EUR">Euro (€)</option>
+              <option value="GBP">British Pound (£)</option>
             </select>
           </div>
         </div>
@@ -82,7 +80,7 @@ function QuotationDisplay({ quote }) {
               </div>
               <div className="text-right ml-4">
                 <span className="font-semibold text-gray-800">
-                  {convertCurrency(extractPrice(service.price))}
+                  {formatCurrency(extractPrice(service.price))}
                 </span>
               </div>
             </div>
@@ -100,19 +98,19 @@ function QuotationDisplay({ quote }) {
           
           <div className="flex justify-between text-sm">
             <span>Subtotal:</span>
-            <span>{convertCurrency(totalOriginal)}</span>
+            <span>{formatCurrency(totalOriginal)}</span>
           </div>
           
           {discount > 0 && (
             <div className="flex justify-between text-sm text-green-600">
               <span>Discount ({discount}%):</span>
-              <span>-{convertCurrency(discountAmount)}</span>
+              <span>-{formatCurrency(discountAmount)}</span>
             </div>
           )}
           
           <div className="flex justify-between text-lg font-bold text-gray-800 pt-2 border-t">
             <span>Total Cost:</span>
-            <span>{convertCurrency(finalTotal)}</span>
+            <span>{formatCurrency(finalTotal)}</span>
           </div>
         </div>
         

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import analytics from "../utils/analytics";
 
 function useQuotationAI() {
   const [loading, setLoading] = useState(false);
@@ -56,6 +57,10 @@ ${requirement}`;
         const cleanText = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
         const json = JSON.parse(cleanText);
         setQuote(json);
+        
+        // Track successful quotation generation
+        const totalCost = json.totalCost ? parseInt(json.totalCost.replace(/[^\d]/g, '')) : 0;
+        analytics.trackQuotationGenerated(json.projectTitle, totalCost);
       } catch (e) {
         console.error("Invalid JSON from Gemini:", text);
         setError("Failed to parse AI response. Please try again.");

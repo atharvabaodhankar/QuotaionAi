@@ -3,6 +3,7 @@ import useQuotationAI from './hooks/useQuotationAI'
 import QuotationForm from './components/QuotationForm'
 import QuotationDisplay from './components/QuotationDisplay'
 import SampleExamples from './components/SampleExamples'
+import LoadingSpinner from './components/LoadingSpinner'
 
 function App() {
   const { loading, quote, error, generateQuote } = useQuotationAI();
@@ -37,12 +38,24 @@ function App() {
         {/* Error Display */}
         {error && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-            <p className="text-red-800">{error}</p>
+            <div className="flex items-center">
+              <span className="text-red-500 mr-2">⚠️</span>
+              <p className="text-red-800">{error}</p>
+            </div>
           </div>
         )}
 
+        {/* Loading State */}
+        {loading && <LoadingSpinner />}
+
         {/* Quotation Display */}
-        <QuotationDisplay quote={quote} />
+        {!loading && <QuotationDisplay quote={quote} />}
+
+        {/* Footer */}
+        <footer className="text-center mt-12 py-6 text-gray-500 text-sm">
+          <p>Powered by Google Gemini AI • Built with React + Tailwind CSS</p>
+          <p className="mt-1">Generate professional quotations in seconds ⚡</p>
+        </footer>
       </div>
     </div>
   )
