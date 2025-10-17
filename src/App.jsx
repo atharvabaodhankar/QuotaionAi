@@ -1,9 +1,12 @@
+import { useState } from 'react'
 import useQuotationAI from './hooks/useQuotationAI'
 import QuotationForm from './components/QuotationForm'
 import QuotationDisplay from './components/QuotationDisplay'
+import SampleExamples from './components/SampleExamples'
 
 function App() {
   const { loading, quote, error, generateQuote } = useQuotationAI();
+  const [selectedExample, setSelectedExample] = useState('');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
@@ -18,8 +21,18 @@ function App() {
           </p>
         </div>
 
+        {/* Sample Examples */}
+        <SampleExamples 
+          onSelectExample={setSelectedExample} 
+          loading={loading} 
+        />
+
         {/* Form */}
-        <QuotationForm onGenerate={generateQuote} loading={loading} />
+        <QuotationForm 
+          onGenerate={generateQuote} 
+          loading={loading} 
+          initialValue={selectedExample}
+        />
 
         {/* Error Display */}
         {error && (

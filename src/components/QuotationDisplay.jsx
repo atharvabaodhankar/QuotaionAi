@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import ExportButton from './ExportButton';
 
 function QuotationDisplay({ quote }) {
   const [discount, setDiscount] = useState(0);
@@ -122,6 +123,9 @@ function QuotationDisplay({ quote }) {
             </p>
           </div>
         )}
+
+        {/* Export Buttons */}
+        <ExportButton quote={quote} discount={discount} currency={currency} />
       </div>
     </div>
   );

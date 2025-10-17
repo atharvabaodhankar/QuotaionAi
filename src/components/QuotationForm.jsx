@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-function QuotationForm({ onGenerate, loading }) {
-  const [requirement, setRequirement] = useState('');
+function QuotationForm({ onGenerate, loading, initialValue = '' }) {
+  const [requirement, setRequirement] = useState(initialValue);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -9,6 +9,11 @@ function QuotationForm({ onGenerate, loading }) {
       onGenerate(requirement);
     }
   };
+
+  // Update requirement when initialValue changes
+  useEffect(() => {
+    setRequirement(initialValue);
+  }, [initialValue]);
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
