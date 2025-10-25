@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { TypeAnimation } from "react-type-animation";
 import useQuotationAI from "../hooks/useQuotationAI";
 import QuotationDisplay from "./QuotationDisplay";
 import LoadingSpinner from "./LoadingSpinner";

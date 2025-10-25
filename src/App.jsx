@@ -1,13 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LandingPage from "./components/LandingPage";
-import QuotationWizard from "./components/QuotationWizard";
+import CinematicWizard from "./components/CinematicWizard";
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/tool" element={<QuotationWizard />} />
+        <Route path="/tool" element={<CinematicWizard />} />
       </Routes>
     </Router>
   );
