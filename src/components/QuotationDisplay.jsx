@@ -128,42 +128,127 @@ function QuotationDisplay({ quote }) {
                     const doc = new jsPDF();
                     console.log('jsPDF document created');
                     
-                    // Set font and add content
-                    doc.setFontSize(20);
-                    doc.text('PROFESSIONAL QUOTATION', 20, 30);
+                    // Header with background
+                    doc.setFillColor(255, 71, 66); // Red background
+                    doc.rect(0, 0, 210, 40, 'F');
                     
+                    doc.setTextColor(255, 255, 255); // White text
+                    doc.setFontSize(24);
+                    doc.setFont(undefined, 'bold');
+                    doc.text('PROJECT QUOTATION', 20, 25);
+                    
+                    // Reset colors
+                    doc.setTextColor(0, 0, 0);
+                    doc.setFont(undefined, 'normal');
+                    
+                    let yPos = 60;
+                    
+                    // Project Title
+                    doc.setFontSize(18);
+                    doc.setFont(undefined, 'bold');
+                    doc.text(quote.projectTitle, 20, yPos);
+                    yPos += 15;
+                    
+                    // Project details in a nice layout
                     doc.setFontSize(12);
-                    let yPos = 50;
+                    doc.setFont(undefined, 'normal');
                     
-                    // Project details
-                    doc.text(`Project: ${quote.projectTitle}`, 20, yPos);
-                    yPos += 10;
-                    doc.text(`Duration: ${quote.estimatedDuration}`, 20, yPos);
-                    yPos += 10;
-                    doc.text(`Total Cost: ${quote.totalCost}`, 20, yPos);
-                    yPos += 20;
+                    // Create info boxes
+                    const boxWidth = 55;
+                    const boxHeight = 25;
                     
-                    // Client requirements
-                    doc.text('Client Requirements:', 20, yPos);
+                    // Duration box
+                    doc.setFillColor(248, 249, 250);
+                    doc.rect(20, yPos, boxWidth, boxHeight, 'F');
+                    doc.setFont(undefined, 'bold');
+                    doc.text('Duration', 22, yPos + 8);
+                    doc.setFont(undefined, 'normal');
+                    doc.text(quote.estimatedDuration, 22, yPos + 16);
+                    
+                    // Total cost box
+                    doc.setFillColor(248, 249, 250);
+                    doc.rect(80, yPos, boxWidth, boxHeight, 'F');
+                    doc.setFont(undefined, 'bold');
+                    doc.text('Total Investment', 82, yPos + 8);
+                    doc.setFont(undefined, 'normal');
+                    doc.setFontSize(14);
+                    doc.setTextColor(255, 71, 66);
+                    doc.text(quote.totalCost, 82, yPos + 18);
+                    doc.setTextColor(0, 0, 0);
+                    doc.setFontSize(12);
+                    
+                    // Date box
+                    doc.setFillColor(248, 249, 250);
+                    doc.rect(140, yPos, boxWidth, boxHeight, 'F');
+                    doc.setFont(undefined, 'bold');
+                    doc.text('Generated', 142, yPos + 8);
+                    doc.setFont(undefined, 'normal');
+                    doc.text(new Date().toLocaleDateString(), 142, yPos + 16);
+                    
+                    yPos += 40;
+                    
+                    // Client Requirements Section
+                    doc.setFontSize(16);
+                    doc.setFont(undefined, 'bold');
+                    doc.setTextColor(255, 71, 66);
+                    doc.text('Project Overview', 20, yPos);
+                    doc.setTextColor(0, 0, 0);
                     yPos += 10;
+                    
+                    doc.setFontSize(11);
+                    doc.setFont(undefined, 'normal');
                     const reqLines = doc.splitTextToSize(quote.clientRequirementSummary, 170);
                     doc.text(reqLines, 20, yPos);
-                    yPos += reqLines.length * 5 + 10;
+                    yPos += reqLines.length * 6 + 15;
                     
-                    // Services
-                    doc.text('Services Breakdown:', 20, yPos);
-                    yPos += 10;
+                    // Services Section
+                    doc.setFontSize(16);
+                    doc.setFont(undefined, 'bold');
+                    doc.setTextColor(255, 71, 66);
+                    doc.text('Service Breakdown', 20, yPos);
+                    doc.setTextColor(0, 0, 0);
+                    yPos += 15;
                     
+                    // Services table header
+                    doc.setFillColor(240, 240, 240);
+                    doc.rect(20, yPos - 5, 170, 12, 'F');
+                    doc.setFontSize(10);
+                    doc.setFont(undefined, 'bold');
+                    doc.text('SERVICE', 22, yPos + 2);
+                    doc.text('PRICE', 160, yPos + 2);
+                    yPos += 15;
+                    
+                    doc.setFont(undefined, 'normal');
                     quote.services.forEach((service, index) => {
                       if (yPos > 250) {
                         doc.addPage();
                         yPos = 30;
                       }
-                      doc.text(`${index + 1}. ${service.name} - ${service.price}`, 20, yPos);
-                      yPos += 7;
+                      
+                      // Service name
+                      doc.setFontSize(11);
+                      doc.setFont(undefined, 'bold');
+                      doc.text(`${index + 1}. ${service.name}`, 22, yPos);
+                      
+                      // Price aligned right
+                      doc.setFont(undefined, 'bold');
+                      doc.setTextColor(255, 71, 66);
+                      doc.text(service.price, 185, yPos, { align: 'right' });
+                      doc.setTextColor(0, 0, 0);
+                      yPos += 8;
+                      
+                      // Service description
+                      doc.setFontSize(10);
+                      doc.setFont(undefined, 'normal');
+                      doc.setTextColor(100, 100, 100);
                       const descLines = doc.splitTextToSize(service.description, 160);
                       doc.text(descLines, 25, yPos);
-                      yPos += descLines.length * 5 + 5;
+                      doc.setTextColor(0, 0, 0);
+                      yPos += descLines.length * 5 + 10;
+                      
+                      // Add separator line
+                      doc.setDrawColor(230, 230, 230);
+                      doc.line(20, yPos - 5, 190, yPos - 5);
                     });
                     
                     // Footer
@@ -171,8 +256,14 @@ function QuotationDisplay({ quote }) {
                       doc.addPage();
                       yPos = 30;
                     }
-                    yPos += 10;
-                    doc.text(`Generated by QuotationAI on ${new Date().toLocaleDateString()}`, 20, yPos);
+                    
+                    yPos += 20;
+                    doc.setFillColor(248, 249, 250);
+                    doc.rect(20, yPos - 5, 170, 20, 'F');
+                    doc.setFontSize(10);
+                    doc.setTextColor(100, 100, 100);
+                    doc.text('Generated by QuotationAI • Professional Quotation System', 22, yPos + 5);
+                    doc.text(`Valid for 30 days from ${new Date().toLocaleDateString()}`, 22, yPos + 12);
                     
                     // Save the PDF
                     console.log('Saving PDF...');
