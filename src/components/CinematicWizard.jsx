@@ -37,6 +37,8 @@ import {
   Bot,
   Zap as Lightning,
   Monitor,
+  Plus,
+  X,
 } from "lucide-react";
 import {
   SiReact,
@@ -65,11 +67,14 @@ function CinematicWizard() {
     projectType: "",
     techStack: [],
     features: [],
+    customFeatures: [],
     timeline: "",
     budget: "",
   });
 
-  const totalSteps = 6;
+  const [newFeature, setNewFeature] = useState("");
+
+  const totalSteps = 7;
 
   const timelineOptions = [
     {
@@ -111,39 +116,32 @@ function CinematicWizard() {
 
   const budgetOptions = [
     {
-      value: "Under ₹50,000",
-      label: "Under ₹50,000",
+      value: "Under ₹5,000",
+      label: "Under ₹5,000",
       desc: "Small project",
       icon: Heart,
       color: "text-green-600",
     },
     {
-      value: "₹50,000 - ₹1,00,000",
-      label: "₹50,000 - ₹1,00,000",
+      value: "₹5,000 - ₹10,000",
+      label: "₹5,000 - ₹10,000",
       desc: "Medium project",
       icon: Star,
       color: "text-blue-600",
     },
     {
-      value: "₹1,00,000 - ₹2,50,000",
-      label: "₹1,00,000 - ₹2,50,000",
+      value: "₹10,000 - ₹20,000",
+      label: "₹10,000 - ₹20,000",
       desc: "Large project",
       icon: Crown,
       color: "text-purple-600",
     },
     {
-      value: "₹2,50,000 - ₹5,00,000",
-      label: "₹2,50,000 - ₹5,00,000",
+      value: "Above ₹20,000",
+      label: "Above ₹20,000",
       desc: "Enterprise project",
       icon: Rocket,
       color: "text-orange-600",
-    },
-    {
-      value: "Above ₹5,00,000",
-      label: "Above ₹5,00,000",
-      desc: "Premium project",
-      icon: Sparkles,
-      color: "text-red-600",
     },
   ];
 
@@ -438,6 +436,7 @@ App Name: ${formData.appName}
 Project Type: ${formData.projectType}
 Technology Stack: ${formData.techStack.join(", ")}
 Key Features: ${formData.features.join(", ")}
+${formData.customFeatures.length > 0 ? `Custom Features: ${formData.customFeatures.join(", ")}` : ''}
 Timeline: ${formData.timeline}
 Budget Range: ${formData.budget}
     `.trim();
@@ -462,8 +461,10 @@ Budget Range: ${formData.budget}
       case 4:
         return formData.features.length > 0;
       case 5:
-        return formData.timeline && formData.budget;
+        return true; // Custom features step is optional, always valid
       case 6:
+        return formData.timeline && formData.budget;
+      case 7:
         return true;
       default:
         return false;
@@ -1090,8 +1091,150 @@ Budget Range: ${formData.budget}
                 </motion.div>
               )}
 
-              {/* Step 5: Timeline & Budget */}
+              {/* Step 5: Custom Features (Optional) */}
               {currentStep === 5 && (
+                <motion.div
+                  className="p-12 min-h-[500px]"
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  <motion.div
+                    variants={itemVariants}
+                    className="text-center mb-12"
+                  >
+                    <h2 className="text-3xl font-bold text-gray-800 font-display mb-4">
+                      Add Custom Features
+                    </h2>
+                    <p className="text-lg text-gray-600 font-body">
+                      Want something specific? Add your custom requirements (Optional)
+                    </p>
+                  </motion.div>
+
+                  <motion.div
+                    className="max-w-2xl mx-auto"
+                    variants={containerVariants}
+                  >
+                    {/* Add Feature Input */}
+                    <motion.div
+                      variants={itemVariants}
+                      className="mb-8"
+                    >
+                      <div className="flex gap-3">
+                        <motion.input
+                          type="text"
+                          value={newFeature}
+                          onChange={(e) => setNewFeature(e.target.value)}
+                          placeholder="e.g., Dark mode toggle, Email notifications, Social login..."
+                          className="flex-1 px-4 py-3 border-2 border-gray-200/50 rounded-xl bg-white/60 backdrop-blur-sm focus:outline-none focus:border-red-500 focus:bg-white/80 transition-all font-body"
+                          onKeyPress={(e) => {
+                            if (e.key === 'Enter' && newFeature.trim()) {
+                              setFormData(prev => ({
+                                ...prev,
+                                customFeatures: [...prev.customFeatures, newFeature.trim()]
+                              }));
+                              setNewFeature('');
+                            }
+                          }}
+                          whileFocus={{ scale: 1.02 }}
+                        />
+                        <motion.button
+                          onClick={() => {
+                            if (newFeature.trim()) {
+                              setFormData(prev => ({
+                                ...prev,
+                                customFeatures: [...prev.customFeatures, newFeature.trim()]
+                              }));
+                              setNewFeature('');
+                            }
+                          }}
+                          className="px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl font-medium hover:from-red-600 hover:to-red-700 transition-all shadow-lg"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          disabled={!newFeature.trim()}
+                        >
+                          <Plus size={20} />
+                        </motion.button>
+                      </div>
+                    </motion.div>
+
+                    {/* Custom Features List */}
+                    <motion.div
+                      variants={containerVariants}
+                      className="space-y-3"
+                    >
+                      <AnimatePresence>
+                        {formData.customFeatures.map((feature, index) => (
+                          <motion.div
+                            key={index}
+                            variants={itemVariants}
+                            initial={{ opacity: 0, x: -20, scale: 0.9 }}
+                            animate={{ opacity: 1, x: 0, scale: 1 }}
+                            exit={{ opacity: 0, x: 20, scale: 0.9 }}
+                            className="flex items-center gap-3 p-4 bg-white/60 backdrop-blur-sm border border-gray-200/50 rounded-xl group hover:bg-white/80 transition-all"
+                          >
+                            <motion.div
+                              className="w-2 h-2 bg-red-500 rounded-full"
+                              animate={{ scale: [1, 1.2, 1] }}
+                              transition={{ duration: 2, repeat: Infinity }}
+                            />
+                            <span className="flex-1 text-gray-800 font-body">
+                              {feature}
+                            </span>
+                            <motion.button
+                              onClick={() => {
+                                setFormData(prev => ({
+                                  ...prev,
+                                  customFeatures: prev.customFeatures.filter((_, i) => i !== index)
+                                }));
+                              }}
+                              className="opacity-0 group-hover:opacity-100 p-1 text-red-500 hover:text-red-700 transition-all"
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                            >
+                              <X size={16} />
+                            </motion.button>
+                          </motion.div>
+                        ))}
+                      </AnimatePresence>
+                      
+                      {formData.customFeatures.length === 0 && (
+                        <motion.div
+                          variants={itemVariants}
+                          className="text-center py-12 text-gray-500"
+                        >
+                          <motion.div
+                            animate={{ y: [0, -10, 0] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                          >
+                            ✨ No custom features added yet
+                          </motion.div>
+                          <p className="mt-2 text-sm">
+                            Add specific features you need for your project
+                          </p>
+                        </motion.div>
+                      )}
+                    </motion.div>
+
+                    {/* Skip Option */}
+                    <motion.div
+                      variants={itemVariants}
+                      className="text-center mt-8"
+                    >
+                      <motion.button
+                        onClick={() => setCurrentStep(6)}
+                        className="text-gray-500 hover:text-gray-700 font-medium transition-colors"
+                        whileHover={{ scale: 1.05 }}
+                      >
+                        Skip this step →
+                      </motion.button>
+                    </motion.div>
+                  </motion.div>
+                </motion.div>
+              )}
+
+              {/* Step 6: Timeline & Budget */}
+              {currentStep === 6 && (
                 <motion.div
                   className="p-12 min-h-[500px]"
                   variants={containerVariants}
@@ -1328,8 +1471,8 @@ Budget Range: ${formData.budget}
                 </motion.div>
               )}
 
-              {/* Step 6: Summary */}
-              {currentStep === 6 && (
+              {/* Step 7: Summary */}
+              {currentStep === 7 && (
                 <motion.div
                   className="p-12 min-h-[500px] text-center"
                   variants={containerVariants}

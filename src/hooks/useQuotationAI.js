@@ -28,7 +28,7 @@ Follow these exact rules:
 }
 3. Do not include any explanations or markdown formatting.
 4. Currency should default to Indian Rupees (₹).
-5. Keep the pricing realistic and consistent with software industry standards.
+5. Keep the pricing affordable and budget-friendly. Total costs should typically be under ₹20,000 for most projects, with individual services priced between ₹1,000-₹5,000 each.
 6. Write short, clear, human-like summaries.
 
 Now generate the quotation for this requirement:
