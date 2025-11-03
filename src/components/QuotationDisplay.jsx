@@ -38,6 +38,21 @@ function QuotationDisplay({ quote }) {
     const description = currentQuote.clientRequirementSummary.toLowerCase();
 
     if (
+      description.includes("ai") ||
+      description.includes("plagiarism") ||
+      description.includes("detection") ||
+      description.includes("artificial intelligence") ||
+      description.includes("machine learning")
+    ) {
+      return [
+        { name: "PlagiarismGuard", desc: "AI-powered plagiarism detection" },
+        { name: "ContentShield", desc: "Smart content verification" },
+        { name: "OriginCheck", desc: "Originality detection system" },
+        { name: "PlagDetect", desc: "Advanced plagiarism scanner" },
+        { name: "AuthenticAI", desc: "AI authenticity checker" },
+        { name: "CopyGuardian", desc: "Content protection platform" },
+      ];
+    } else if (
       description.includes("social") ||
       description.includes("chat") ||
       description.includes("messaging")
@@ -102,6 +117,34 @@ function QuotationDisplay({ quote }) {
         { name: "FinFlow", desc: "Financial dashboard" },
         { name: "PennyPro", desc: "Expense optimization" },
         { name: "FinanceCore", desc: "Financial management hub" },
+      ];
+    } else if (
+      description.includes("blockchain") ||
+      description.includes("crypto") ||
+      description.includes("decentralized") ||
+      description.includes("web3")
+    ) {
+      return [
+        { name: "BlockChain", desc: "Blockchain platform" },
+        { name: "CryptoCore", desc: "Cryptocurrency solution" },
+        { name: "DecentraHub", desc: "Decentralized platform" },
+        { name: "Web3Bridge", desc: "Web3 integration platform" },
+        { name: "ChainLink", desc: "Blockchain connector" },
+        { name: "CryptoVault", desc: "Secure crypto platform" },
+      ];
+    } else if (
+      description.includes("task") ||
+      description.includes("productivity") ||
+      description.includes("project") ||
+      description.includes("management")
+    ) {
+      return [
+        { name: "TaskMaster", desc: "Task management system" },
+        { name: "ProductivePro", desc: "Productivity enhancement" },
+        { name: "ProjectFlow", desc: "Project management tool" },
+        { name: "WorkWise", desc: "Smart work organizer" },
+        { name: "TaskForge", desc: "Task creation platform" },
+        { name: "ManageCore", desc: "Management foundation" },
       ];
     } else {
       return [
