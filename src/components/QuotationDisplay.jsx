@@ -30,11 +30,12 @@ function QuotationDisplay({ quote }) {
   });
   const [showNameSuggestions, setShowNameSuggestions] = useState(false);
   const [selectedAppName, setSelectedAppName] = useState("");
+  const [currentQuote, setCurrentQuote] = useState(quote);
   const { convertCurrency, symbols, rates } = useCurrencyConverter();
 
   // App name suggestions based on project description
   const generateAppNameSuggestions = () => {
-    const description = quote.clientRequirementSummary.toLowerCase();
+    const description = currentQuote.clientRequirementSummary.toLowerCase();
 
     if (
       description.includes("social") ||
@@ -47,6 +48,7 @@ function QuotationDisplay({ quote }) {
         { name: "SocialSync", desc: "Community platform" },
         { name: "LinkLive", desc: "Live social interactions" },
         { name: "ShareSpark", desc: "Content sharing network" },
+        { name: "SocialHub", desc: "Social community center" },
       ];
     } else if (
       description.includes("shop") ||
@@ -60,6 +62,7 @@ function QuotationDisplay({ quote }) {
         { name: "BuyBliss", desc: "Premium shopping experience" },
         { name: "MarketMagic", desc: "Smart commerce platform" },
         { name: "TradeTrend", desc: "Trending products hub" },
+        { name: "CommerceCore", desc: "E-commerce foundation" },
       ];
     } else if (
       description.includes("health") ||
@@ -72,6 +75,7 @@ function QuotationDisplay({ quote }) {
         { name: "VitalVibe", desc: "Health monitoring app" },
         { name: "WellnessWave", desc: "Lifestyle optimization" },
         { name: "FitForge", desc: "Workout planning tool" },
+        { name: "ActiveLife", desc: "Active lifestyle companion" },
       ];
     } else if (
       description.includes("learn") ||
@@ -84,6 +88,7 @@ function QuotationDisplay({ quote }) {
         { name: "SkillSphere", desc: "Skill development hub" },
         { name: "StudySmart", desc: "Intelligent study assistant" },
         { name: "KnowledgeKit", desc: "Learning resource center" },
+        { name: "EduCore", desc: "Educational foundation" },
       ];
     } else if (
       description.includes("money") ||
@@ -96,6 +101,7 @@ function QuotationDisplay({ quote }) {
         { name: "WealthWise", desc: "Investment tracking platform" },
         { name: "FinFlow", desc: "Financial dashboard" },
         { name: "PennyPro", desc: "Expense optimization" },
+        { name: "FinanceCore", desc: "Financial management hub" },
       ];
     } else {
       return [
@@ -104,6 +110,7 @@ function QuotationDisplay({ quote }) {
         { name: "SmartFlow", desc: "Intelligent workflow system" },
         { name: "ProActive", desc: "Professional productivity tool" },
         { name: "InnovateLab", desc: "Innovation-driven platform" },
+        { name: "TechCore", desc: "Technology foundation" },
       ];
     }
   };
@@ -173,9 +180,9 @@ function QuotationDisplay({ quote }) {
                 Your Project Quotation
               </h1>
               <p className="text-base font-normal leading-normal text-gray-500">
-                For Project: {quote.projectTitle}
-                {(quote.projectTitle.includes("To be decided") ||
-                  quote.projectTitle.includes("TBD")) && (
+                For Project: {currentQuote.projectTitle}
+                {(currentQuote.projectTitle.includes("To be decided") ||
+                  currentQuote.projectTitle.includes("TBD")) && (
                   <span className="ml-2 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
                     Name pending
                   </span>
@@ -193,8 +200,8 @@ function QuotationDisplay({ quote }) {
               </motion.button>
               <motion.button
                 className={`flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-lg shadow-sm transition-colors ${
-                  quote.projectTitle.includes("To be decided") ||
-                  quote.projectTitle.includes("TBD")
+                  currentQuote.projectTitle.includes("To be decided") ||
+                  currentQuote.projectTitle.includes("TBD")
                     ? "text-white bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 animate-pulse"
                     : "text-orange-600 bg-orange-50 border border-orange-200 hover:bg-orange-100"
                 }`}
@@ -203,8 +210,8 @@ function QuotationDisplay({ quote }) {
                 onClick={() => setShowNameSuggestions(!showNameSuggestions)}
               >
                 <Sparkles size={16} />
-                {quote.projectTitle.includes("To be decided") ||
-                quote.projectTitle.includes("TBD")
+                {currentQuote.projectTitle.includes("To be decided") ||
+                currentQuote.projectTitle.includes("TBD")
                   ? "Choose App Name"
                   : "Suggest Names"}
               </motion.button>
@@ -272,7 +279,7 @@ function QuotationDisplay({ quote }) {
                     // Project Title
                     doc.setFontSize(18);
                     doc.setFont(undefined, "bold");
-                    doc.text(quote.projectTitle, 20, yPos);
+                    doc.text(currentQuote.projectTitle, 20, yPos);
                     yPos += 15;
 
                     // Project details in a nice layout
@@ -879,8 +886,12 @@ Date: ${new Date().toLocaleDateString()}
                     key={suggestion.name}
                     onClick={() => {
                       setSelectedAppName(suggestion.name);
-                      // Here we would regenerate the quotation with the new name
-                      // For now, just close the modal
+                      // Update the quote with the new name
+                      const updatedQuote = {
+                        ...currentQuote,
+                        projectTitle: suggestion.name,
+                      };
+                      setCurrentQuote(updatedQuote);
                       setShowNameSuggestions(false);
                     }}
                     className="p-4 text-left rounded-xl border-2 border-gray-200 hover:border-red-500 hover:bg-red-50 transition-all group"

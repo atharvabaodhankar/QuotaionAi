@@ -30,6 +30,7 @@ Follow these exact rules:
 4. Currency should default to Indian Rupees (₹).
 5. Keep the pricing affordable and budget-friendly. Total costs should typically be under ₹20,000 for most projects, with individual services priced between ₹1,000-₹5,000 each.
 6. Write short, clear, human-like summaries.
+7. IMPORTANT: If the App Name contains "To be decided" or "TBD", use EXACTLY that text as the projectTitle. Do not create or suggest any names.
 
 Now generate the quotation for this requirement:
 ${requirement}`;
